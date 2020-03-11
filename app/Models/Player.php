@@ -32,17 +32,11 @@ class Player extends Model
         'red_cards', 'saves', 'bonus', 'bps', 'influence',
         'creativity', 'threat', 'ict_index'
     ];
-    protected $appends = [
-        'full_name'
-    ];
+    
     protected $casts = [
         'in_dreamteam' => 'boolean',
         'special' => 'boolean',
     ];
-
-    public function getFullNameAttribute() {
-        return "{$this->first_name} {$this->second_name}";
-    }
 
     
 }

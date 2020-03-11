@@ -28,11 +28,11 @@ class PlayerRepository implements RepositoryInterface {
 	}
 
 	public function all() {
-		$this->model->select('id', 'full_name')->get();
+		return $this->model->select('id', \DB::raw("CONCAT(first_name,' ',second_name) AS full_name"))->get();
 	}
 
 	public function store(array $data) {
-		return $this->model->create($data);
+		return $this->model->firstOrCreate($data);
 	}
 
 	public function update(array $data, $id) {

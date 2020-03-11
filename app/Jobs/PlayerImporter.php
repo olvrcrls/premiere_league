@@ -8,25 +8,31 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Client;
+use App\Models\Player;
+use App\Repositories\PlayerRepository;
 
 class PlayerImporter implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $player;
     protected $apiUrl;
-    protected $apiUrlClient;
+    protected $options;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($apiUrl, $options)
     {
-        $this->apiUrl = "https://fantasy.premierleague.com/api/bootstrap-static/";
-        $this->apiClient = new Client();
+        $this->apiUrl = $apiUrl ? config('api.base_url') . $apiUrl : config('api.base_url') . "bootstrap-static/";
+        $this->options = $options ?:  [
+            'http' => [
+                'method' => 'GET',
+                'header' => 'Content-Type: application/json' 
+            ]
+        ];
     }
 
     /**
@@ -34,18 +40,30 @@ class PlayerImporter implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(Player $player)
     {
-        try {
-            $response = $this->apiClient->request($this->apiUrl);
-            if ($response->getStatusCode() === "200") {
-                
+		try {
+            $this->player = new PlayerRepository($player);
+			$response = \file_get_contents($this->apiUrl, false, stream_context_create($this->options));
+            $data = get_object_vars(json_decode($data));
+            if ($data) {
+                $players = $data['elements'];
+                $this->storePlayers($players);
+                echo "Successfully imported players data.\n";
             } else {
-                echo "Can not connect to server";
+                echo "The GET endpoint has empty records.\n";
             }
-        } catch (Exception $e) {
+			echo 'ok';
+		} catch (Exception $e) {
+            error_log($e->getMessage());
+			echo $e->getMessage();
+		}
+    }
 
+    public function storePlayers($data) {
+        foreach ($data as $player) {
+            $p = get_object_vars($player);
+            $this->player->store($p);
         }
-
     }
 }
