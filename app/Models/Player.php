@@ -9,8 +9,7 @@ class Player extends Model
     protected $primaryKey = 'id';
     protected $table = 'players';
     protected $fillable = [
-        'code',
-        'chance_of_playing_next_round',
+        'code', 'chance_of_playing_next_round',
         'chance_of_playing_this_round',
         'cost_change_event',
         'cost_change_event_fall',
@@ -38,12 +37,8 @@ class Player extends Model
     ];
     protected $casts = [
         'in_dreamteam' => 'boolean',
-        'special' => 'boolean'
+        'special' => 'boolean',
     ];
-
-    public function getRouteKeyName() {
-        return 'code';
-    }
 
     public function getFullNameAttribute() {
         return "{$this->first_name} {$this->second_name}";

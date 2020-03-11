@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Repositories;
-
+use Illuminate\Http\Request;
 interface RepositoryInterface {
 	public function all();
 
-	public function create(array $attributes);
+	public function store(array $data);
 
-	public function update(array $attributes, $id);
+	public function update(array $data, $id);
 
 	public function delete($id);
 

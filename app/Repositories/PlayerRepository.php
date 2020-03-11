@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Repositories\RepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class PlayerRepository implements RepositoryInterface {
 	
@@ -30,13 +31,13 @@ class PlayerRepository implements RepositoryInterface {
 		$this->model->select('id', 'full_name')->get();
 	}
 
-	public function create(array $attributes) {
-		return $this->model->create($attributes);
+	public function store(array $data) {
+		return $this->model->create($data);
 	}
 
-	public function update(array $attributes, $id) {
-		$record = $this->model->findOrFail($id);
-		return $record->update($attributes);
+	public function update(array $data, $id) {
+		$record->update($data, $id);
+		return $this->model->findOrFail($id);
 	}
 
 	public function show($id) {
@@ -44,7 +45,6 @@ class PlayerRepository implements RepositoryInterface {
 	}
 
 	public function delete($id) {
-		$record = $this->model->find($id);
-		$record->delete();
+		return $this->model->delete($id);
 	}
 }
