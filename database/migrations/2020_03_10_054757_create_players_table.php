@@ -68,7 +68,7 @@ class CreatePlayersTable extends Migration
 
             
             $table->string('news');
-            $table->string('photo');
+            $table->string('photo')->nullable();
             $table->string('squad_number')->nullable();
             $table->string('status');
             $table->string('web_name');

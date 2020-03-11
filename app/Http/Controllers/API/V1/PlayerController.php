@@ -23,4 +23,8 @@ class PlayerController extends Controller
 	public function show($id) {
 		return $this->player->show($id);
 	}
+
+	public function store(Request $request) {
+		return $this->player->store($request->all());
+	}
 }
