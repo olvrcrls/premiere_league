@@ -24,7 +24,7 @@ class PlayerImporter implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($apiUrl, $options)
+    public function __construct($apiUrl = null, $options = [])
     {
         $this->apiUrl = $apiUrl ? config('api.base_url') . $apiUrl : config('api.base_url') . "bootstrap-static/";
         $this->options = $options ?:  [
@@ -45,7 +45,7 @@ class PlayerImporter implements ShouldQueue
 		try {
             $this->player = new PlayerRepository($player);
 			$response = \file_get_contents($this->apiUrl, false, stream_context_create($this->options));
-            $data = get_object_vars(json_decode($data));
+            $data = get_object_vars(json_decode($response));
             if ($data) {
                 $players = $data['elements'];
                 $this->storePlayers($players);
